@@ -17,7 +17,7 @@ use crate::{
     AppState,
 };
 
-const X_REAL_IP: &str = "X-Real-Ip";
+pub const X_REAL_IP: &str = "X-Real-Ip";
 const X_REAL_PORT: &str = "X-Real-Port";
 const X_REAL_PROTO: &str = "X-Real-Proto";
 
