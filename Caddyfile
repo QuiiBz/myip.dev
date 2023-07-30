@@ -1,0 +1,15 @@
+http://myip.dev {
+  reverse_proxy localhost:3000 {
+    header_up X-Real-Ip "{remote_host}"
+    header_up X-Real-Port "{remote_port}"
+    header_up X-Real-Proto "{http.request.proto}"
+  }
+}
+
+https://myip.dev {
+  reverse_proxy localhost:3000 {
+    header_up X-Real-Ip "{remote_host}"
+    header_up X-Real-Port "{remote_port}"
+    header_up X-Real-Proto "{http.request.proto}"
+  }
+}

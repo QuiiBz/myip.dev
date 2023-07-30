@@ -1,0 +1,13 @@
+{
+  "name": "myip",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "cargo watch -x run",
+    "build": "cargo build --release",
+    "dev:style": "pnpm build:style --watch",
+    "build:style": "tailwindcss -i ./src/templates/style.css -o ./public/style.css"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.3.3"
+  }
+}
