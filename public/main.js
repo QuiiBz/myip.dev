@@ -15,6 +15,24 @@ function onLoad() {
       }, 1000)
     })
   }
+
+  const findForm = document.getElementById('find-form')
+
+  if (findForm) {
+    findForm.addEventListener('submit', event => {
+      event.preventDefault()
+
+      const input = document.getElementById('find-input')
+
+      if (input) {
+        const value = input.value
+
+        if (value) {
+          window.location.href = `/${value}`
+        }
+      }
+    })
+  }
 }
 
 document.addEventListener('DOMContentLoaded', onLoad)

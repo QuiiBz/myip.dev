@@ -18,25 +18,22 @@
 </head>
 <body class="text-slate-500 text-xs">
     <header class="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-8 items-center">
-      <a href="/" class="text-slate-800 hover:underline">My IP</a>
-      <a href="/{{ip}}" class="hover:text-slate-800 hover:underline">Find IP</a>
+      <a href="/" class="hover:text-slate-800 hover:underline">My IP</a>
+      <a href="/{{ip}}" class="text-slate-800 hover:underline">Find IP</a>
     </header>
     <main class="flex flex-col gap-32 items-center justify-center w-screen min-h-screen">
       <div class="flex flex-col items-center justify-center gap-4">
-        <button id="copy-ip" data-ip="{{ip}}" type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200 hover:to-slate-800 hover:shadow-lg active:to-slate-700 cursor-grab active:cursor-grabbing">{{ip}}</button>
-        <span id="copy-ip-text">Click to copy</span>
+        <div type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200">{{ip}}</div>
+        <form id="find-form" class="flex items-center gap-2">
+          <input id="find-input" type="text" value="{{ip}}" placeholder="Find IP" class="w-20 px-1 py-0.5 border border-slate-200 rounded">
+          <button type="submit" class="hover:text-slate-800">Find</span>
+        </form>
       </div>
       <div class="flex flex-col lg:flex-row justify-between gap-16 lg:gap-32">
         <section class="flex flex-col gap-4">
           <h2 class="text-sm text-slate-500">Connection</h2>
           <div class="flex flex-col gap-2">
             <!-- TODO: replace with dl dt dd -->
-            <p>
-              Port:
-              <span class="text-slate-800 select-all">
-                {{port}}
-              </span>
-            </p>
             <p>
               Reverse:
               <span class="text-slate-800 select-all">
@@ -52,41 +49,12 @@
           </div>
         </section>
         <section class="flex flex-col gap-4">
-          <h2 class="text-sm text-slate-500">HTTP</h2>
-          <div class="flex flex-col gap-2">
-            <p>
-              Version:
-              <span class="text-slate-800">
-                {{http.version}}
-              </span>
-            </p>
-            <p>
-              User Agent:
-              <span class="text-slate-800 truncate max-w-[200px] inline-block align-bottom">
-                {{http.user_agent}}
-              </span>
-            </p>
-          </div>
-        </section>
-        <section class="flex flex-col gap-4">
           <h2 class="text-sm text-slate-500">API</h2>
           <div class="flex flex-col gap-2">
             <p>
               Get all (JSON):
               <span class="text-slate-800 select-all font-mono">
-                curl myip.dev
-              </span>
-            </p>
-            <p>
-              Get IPv4 (plain text):
-              <span class="text-slate-800 select-all font-mono">
-                curl myip.dev/raw
-              </span>
-            </p>
-            <p>
-              Get IPv6 (plain text):
-              <span class="text-slate-800 select-all font-mono">
-                curl 6.myip.dev/raw
+                curl myip.dev/{IP}
               </span>
             </p>
           </div>

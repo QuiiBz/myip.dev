@@ -1,7 +1,7 @@
 use crate::{
     connect::AddrConnectInfo,
     ip::MaxmindDB,
-    routes::{full, raw},
+    routes::{full, ip, raw},
 };
 
 use axum::{routing::get, Router};
@@ -27,6 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut handlebars = Handlebars::new();
     handlebars.register_template_file("full", "./src/templates/full.html")?;
+    handlebars.register_template_file("ip", "./src/templates/ip.html")?;
 
     let maxmind = Reader::open_readfile("./GeoLite2-ASN.mmdb")?;
     let state = AppState {
@@ -37,7 +38,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         .route("/", get(full))
         .route("/raw", get(raw))
-        .fallback_service(ServeDir::new("public"))
+        .route("/:ip", get(ip))
+        .nest_service("/static", ServeDir::new("public"))
         .with_state(state);
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
