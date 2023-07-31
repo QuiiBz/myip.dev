@@ -8,7 +8,7 @@ use anyhow::Result;
 use axum::{error_handling::HandleErrorLayer, http::StatusCode, routing::get, Router};
 use std::{net::SocketAddr, time::Duration};
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 
 mod connect;
 mod http;
@@ -26,6 +26,7 @@ async fn main() -> Result<()> {
         .route("/", get(full))
         .route("/raw", get(raw))
         .route("/:ip", get(ip))
+        .route_service("/robots.txt", ServeFile::new("public/robots.txt"))
         .nest_service("/static", ServeDir::new("public"))
         .with_state(state)
         .layer(
