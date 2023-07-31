@@ -25,7 +25,7 @@ const X_REAL_PROTO: &str = "X-Real-Proto";
 pub struct Full {
     ip: String,
     port: u16,
-    reverse: Option<String>,
+    reverse: String,
     r#as: AS,
     http: Http,
 }

@@ -1,7 +1,5 @@
 mod full;
-mod v4;
-mod v6;
+mod raw;
 
 pub use full::full;
-pub use v4::v4;
-pub use v6::v6;
+pub use raw::raw;

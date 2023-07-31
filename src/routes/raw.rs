@@ -3,7 +3,10 @@ use axum::{body::Body, extract::ConnectInfo, http::Request};
 use super::full::X_REAL_IP;
 use crate::connect::AddrConnectInfo;
 
-pub async fn v4(ConnectInfo(addr): ConnectInfo<AddrConnectInfo>, request: Request<Body>) -> String {
+pub async fn raw(
+    ConnectInfo(addr): ConnectInfo<AddrConnectInfo>,
+    request: Request<Body>,
+) -> String {
     // TODO: refactor this shit
     request
         .headers()

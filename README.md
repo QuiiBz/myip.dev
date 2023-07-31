@@ -19,8 +19,8 @@
 
 - Web interface: [https://myip.dev](https://myip.dev)
 - Get all (JSON): `curl myip.dev`
-- Get IPv4 (plain text): `curl myip.dev/4`
-- (WIP) Get IPv6 (plain text): `curl myip.dev/6`
+- Get IPv4 (plain text): `curl myip.dev/raw`
+- Get IPv6 (plain text): `curl 6.myip.dev/raw`
 
 ## License
 

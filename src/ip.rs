@@ -68,6 +68,6 @@ impl AS {
     }
 }
 
-pub fn get_reverse(addr: &IpAddr) -> Option<String> {
-    lookup_addr(&addr).ok()
+pub fn get_reverse(addr: &IpAddr) -> String {
+    lookup_addr(&addr).unwrap_or(UNKNOWN.into())
 }

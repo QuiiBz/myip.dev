@@ -1,7 +1,7 @@
 use crate::{
     connect::AddrConnectInfo,
     ip::MaxmindDB,
-    routes::{full, v4, v6},
+    routes::{full, raw},
 };
 
 use axum::{routing::get, Router};
@@ -36,8 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/", get(full))
-        .route("/4", get(v4))
-        .route("/6", get(v6))
+        .route("/raw", get(raw))
         .fallback_service(ServeDir::new("public"))
         .with_state(state);
 
