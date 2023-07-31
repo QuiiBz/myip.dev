@@ -1,3 +1,4 @@
+// TODO: clean this whole file
 // https://dev.to/jorik/country-code-to-flag-emoji-a21
 function getFlagEmoji(countryCode) {
   if (countryCode === 'unknown') {
@@ -12,6 +13,21 @@ function getFlagEmoji(countryCode) {
   return String.fromCodePoint(...codePoints);
 }
 
+// https://stackoverflow.com/questions/72237719/not-being-able-to-copy-url-to-clipboard-without-adding-the-protocol-https
+function unsecuredCopyToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+  } catch (err) {
+    console.error('Unable to copy to clipboard', err);
+  }
+  document.body.removeChild(textArea);
+}
+
 function onLoad() {
   const ipButton = document.getElementById('copy-ip')
   const ipText = document.getElementById('copy-ip-text')
@@ -20,7 +36,11 @@ function onLoad() {
     const ip = ipButton.getAttribute('data-ip')
 
     ipButton.addEventListener('click', async () => {
-      await navigator.clipboard.writeText(ip)
+      try {
+        await navigator.clipboard.writeText(ip)
+      } catch {
+        unsecuredCopyToClipboard(ip)
+      }
 
       ipText.innerText = 'Copied!'
 
