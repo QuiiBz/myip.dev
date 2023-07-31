@@ -4,4 +4,10 @@ http://myip.dev, http://ipv6.myip.dev, http://6.myip.dev https://myip.dev, https
     header_up X-Real-Port "{remote_port}"
     header_up X-Real-Proto "{http.request.proto}"
   }
+
+  @static {
+    path *.ico *.css *.js *.gif *.webp *.avif *.jpg *.jpeg *.png *.svg *.woff *.woff2
+  }
+
+  header @static ?Cache-Control "public, max-age=604800, immutable"
 }
