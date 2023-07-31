@@ -12,7 +12,7 @@ use serde::Serialize;
 
 use crate::{
     http::is_user_agent_automated,
-    ip::{get_reverse, AS},
+    ip::{get_reverse, Geo, AS},
     AppState,
 };
 
@@ -21,6 +21,7 @@ pub struct Ip {
     ip: String,
     reverse: String,
     r#as: AS,
+    geo: Geo,
 }
 
 pub async fn ip(
@@ -35,9 +36,15 @@ pub async fn ip(
 
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);
-    let r#as = AS::from(&state.maxmind, addr);
+    let r#as = AS::from(&state.maxmind_asn, addr);
+    let geo = Geo::from(&state.maxmind_city, addr);
 
-    let ip = Ip { ip, reverse, r#as };
+    let ip = Ip {
+        ip,
+        reverse,
+        r#as,
+        geo,
+    };
 
     if is_automated {
         return Json(ip).into_response();

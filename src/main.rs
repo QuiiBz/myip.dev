@@ -18,7 +18,8 @@ mod routes;
 #[derive(Clone)]
 pub struct AppState {
     handlebars: Handlebars<'static>,
-    maxmind: Arc<MaxmindDB>,
+    maxmind_asn: Arc<MaxmindDB>,
+    maxmind_city: Arc<MaxmindDB>,
 }
 
 #[tokio::main]
@@ -29,10 +30,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     handlebars.register_template_file("full", "./src/templates/full.html")?;
     handlebars.register_template_file("ip", "./src/templates/ip.html")?;
 
-    let maxmind = Reader::open_readfile("./GeoLite2-ASN.mmdb")?;
+    let maxmind_asn = Arc::new(Reader::open_readfile("./GeoLite2-ASN.mmdb")?);
+    let maxmind_city = Arc::new(Reader::open_readfile("./GeoLite2-City.mmdb")?);
+
     let state = AppState {
         handlebars,
-        maxmind: Arc::new(maxmind),
+        maxmind_asn,
+        maxmind_city,
     };
 
     let app = Router::new()

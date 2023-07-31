@@ -26,7 +26,7 @@
         <button id="copy-ip" data-ip="{{ip}}" type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200 hover:to-slate-800 hover:shadow-lg active:to-slate-700 cursor-grab active:cursor-grabbing">{{ip}}</button>
         <span id="copy-ip-text">Click to copy</span>
       </div>
-      <div class="flex flex-col lg:flex-row justify-between gap-16 lg:gap-32">
+      <div class="grid gap-16 grid-cols-1 lg:grid-cols-3">
         <section class="flex flex-col gap-4">
           <h2 class="text-sm text-slate-500">Connection</h2>
           <div class="flex flex-col gap-2">
@@ -46,7 +46,25 @@
             <p>
               AS:
               <span class="text-slate-800">
-                {{as.org}} (<span class="text-slate-800 select-all">{{as.asn}}</span>)
+                {{as.org}} (<span class="text-slate-800 select-all">AS{{as.asn}}</span>)
+              </span>
+            </p>
+          </div>
+        </section>
+        <section class="flex flex-col gap-4">
+          <h2 class="text-sm text-slate-500">Geo</h2>
+          <div class="flex flex-col gap-2">
+            <p>
+              City:
+              <span class="text-slate-800">
+                {{geo.city}}, {{geo.country}}
+                <span id="geo-flag" data-country="{{geo.country}}" />
+              </span>
+            </p>
+            <p>
+              Location:
+              <span class="text-slate-800 select-all">
+                {{geo.latitude}}, {{geo.longitude}}
               </span>
             </p>
           </div>

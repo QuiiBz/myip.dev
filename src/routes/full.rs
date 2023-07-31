@@ -13,7 +13,7 @@ use serde::Serialize;
 use crate::{
     connect::AddrConnectInfo,
     http::{is_user_agent_automated, Http},
-    ip::{get_reverse, AS},
+    ip::{get_reverse, Geo, AS},
     AppState,
 };
 
@@ -27,6 +27,7 @@ pub struct Full {
     port: u16,
     reverse: String,
     r#as: AS,
+    geo: Geo,
     http: Http,
 }
 
@@ -57,7 +58,8 @@ pub async fn full(
 
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);
-    let r#as = AS::from(&state.maxmind, addr);
+    let r#as = AS::from(&state.maxmind_asn, addr.clone());
+    let geo = Geo::from(&state.maxmind_city, addr);
 
     let http_version = request.headers().get(X_REAL_PROTO).map_or_else(
         || format!("{:?}", request.version()),
@@ -71,6 +73,7 @@ pub async fn full(
         port,
         reverse,
         r#as,
+        geo,
         http,
     };
 

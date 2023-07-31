@@ -1,5 +1,6 @@
 .DS_Store
 GeoLite2-ASN.mmdb
+GeoLite2-City.mmdb
 public/style.css
 
 target/

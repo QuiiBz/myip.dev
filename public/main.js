@@ -1,3 +1,17 @@
+// https://dev.to/jorik/country-code-to-flag-emoji-a21
+function getFlagEmoji(countryCode) {
+  if (countryCode === 'unknown') {
+    return '🌎';
+  }
+
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt());
+
+  return String.fromCodePoint(...codePoints);
+}
+
 function onLoad() {
   const ipButton = document.getElementById('copy-ip')
   const ipText = document.getElementById('copy-ip-text')
@@ -32,6 +46,15 @@ function onLoad() {
         }
       }
     })
+  }
+
+  const geoFlag = document.getElementById('geo-flag')
+
+  if (geoFlag) {
+    const countryCode = geoFlag.getAttribute('data-country')
+    const emoji = getFlagEmoji(countryCode)
+
+    geoFlag.innerText = emoji
   }
 }
 
