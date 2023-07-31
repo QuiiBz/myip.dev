@@ -13,7 +13,7 @@ use serde::Serialize;
 use crate::{
     http::is_user_agent_automated,
     ip::{get_reverse, Geo, AS},
-    AppState,
+    state::AppState,
 };
 
 #[derive(Debug, Serialize)]

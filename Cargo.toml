@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.72"
 axum = "0.6.19"
 dns-lookup = "2.0.2"
 handlebars = "4.3.7"

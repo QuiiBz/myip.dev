@@ -1,13 +1,12 @@
 use crate::{
     connect::AddrConnectInfo,
-    ip::MaxmindDB,
     routes::{full, ip, raw},
+    state::AppState,
 };
 
-use axum::{error_handling::HandleErrorLayer, http::StatusCode, routing::get, BoxError, Router};
-use handlebars::Handlebars;
-use maxminddb::Reader;
-use std::{net::SocketAddr, sync::Arc, time::Duration};
+use anyhow::Result;
+use axum::{error_handling::HandleErrorLayer, http::StatusCode, routing::get, Router};
+use std::{net::SocketAddr, time::Duration};
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
 use tower_http::services::ServeDir;
 
@@ -15,30 +14,13 @@ mod connect;
 mod http;
 mod ip;
 mod routes;
-
-#[derive(Clone)]
-pub struct AppState {
-    handlebars: Handlebars<'static>,
-    maxmind_asn: Arc<MaxmindDB>,
-    maxmind_city: Arc<MaxmindDB>,
-}
+mod state;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<()> {
     tracing_subscriber::fmt::init();
 
-    let mut handlebars = Handlebars::new();
-    handlebars.register_template_file("full", "./src/templates/full.html")?;
-    handlebars.register_template_file("ip", "./src/templates/ip.html")?;
-
-    let maxmind_asn = Arc::new(Reader::open_readfile("./GeoLite2-ASN.mmdb")?);
-    let maxmind_city = Arc::new(Reader::open_readfile("./GeoLite2-City.mmdb")?);
-
-    let state = AppState {
-        handlebars,
-        maxmind_asn,
-        maxmind_city,
-    };
+    let state = AppState::new()?;
 
     let app = Router::new()
         .route("/", get(full))
@@ -48,7 +30,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_state(state)
         .layer(
             ServiceBuilder::new()
-                .layer(HandleErrorLayer::new(|err: BoxError| async move {
+                .layer(HandleErrorLayer::new(|err| async move {
+                    tracing::error!("Unhandled error: {}", err);
+
                     (
                         StatusCode::INTERNAL_SERVER_ERROR,
                         format!("Unhandled error: {}", err),
@@ -60,7 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    tracing::debug!("listening on {}", addr);
+    tracing::debug!("Listening on {}", addr);
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service_with_connect_info::<AddrConnectInfo>())
