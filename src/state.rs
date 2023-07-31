@@ -4,14 +4,17 @@ use anyhow::Result;
 use handlebars::Handlebars;
 use maxminddb::Reader;
 
-use crate::ip::MaxmindDB;
+type MaxmindDB = Reader<Vec<u8>>;
+
+pub struct Maxmind {
+    pub asn: MaxmindDB,
+    pub city: MaxmindDB,
+}
 
 #[derive(Clone)]
 pub struct AppState {
     pub handlebars: Handlebars<'static>,
-    // TODO: use a sub-struct
-    pub maxmind_asn: Arc<MaxmindDB>,
-    pub maxmind_city: Arc<MaxmindDB>,
+    pub maxmind: Arc<Maxmind>,
 }
 
 impl AppState {
@@ -24,7 +27,7 @@ impl AppState {
             }
         };
 
-        let (maxmind_asn, maxmind_city) = match Self::load_maxmind() {
+        let maxmind = match Self::load_maxmind() {
             Ok(maxmind) => maxmind,
             Err(err) => {
                 tracing::error!("Failed to load maxmind: {}", err);
@@ -34,8 +37,7 @@ impl AppState {
 
         Ok(Self {
             handlebars,
-            maxmind_asn,
-            maxmind_city,
+            maxmind,
         })
     }
 
@@ -48,10 +50,10 @@ impl AppState {
         Ok(handlebars)
     }
 
-    fn load_maxmind() -> Result<(Arc<MaxmindDB>, Arc<MaxmindDB>)> {
-        let maxmind_asn = Arc::new(Reader::open_readfile("./GeoLite2-ASN.mmdb")?);
-        let maxmind_city = Arc::new(Reader::open_readfile("./GeoLite2-City.mmdb")?);
+    fn load_maxmind() -> Result<Arc<Maxmind>> {
+        let asn = Reader::open_readfile("./GeoLite2-ASN.mmdb")?;
+        let city = Reader::open_readfile("./GeoLite2-City.mmdb")?;
 
-        Ok((maxmind_asn, maxmind_city))
+        Ok(Arc::new(Maxmind { asn, city }))
     }
 }

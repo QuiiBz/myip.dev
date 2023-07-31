@@ -1,15 +1,12 @@
 use std::net::IpAddr;
 
 use dns_lookup::lookup_addr;
-use maxminddb::Reader;
 
 mod r#as;
 mod geo;
 
 pub use geo::Geo;
 pub use r#as::AS;
-
-pub type MaxmindDB = Reader<Vec<u8>>;
 
 const UNKNOWN: &str = "unknown";
 

@@ -1,9 +1,10 @@
-use std::{net::IpAddr, sync::Arc};
+use std::net::IpAddr;
 
 use maxminddb::geoip2::Asn;
 use serde::Serialize;
 
-use super::{MaxmindDB, UNKNOWN};
+use super::UNKNOWN;
+use crate::state::Maxmind;
 
 #[derive(Debug, Serialize)]
 pub struct AS {
@@ -21,8 +22,8 @@ impl Default for AS {
 }
 
 impl AS {
-    pub fn from(maxmind: &Arc<MaxmindDB>, addr: IpAddr) -> Self {
-        let autonomous_system = maxmind.lookup::<Asn>(addr);
+    pub fn new(maxmind: &Maxmind, addr: IpAddr) -> Self {
+        let autonomous_system = maxmind.asn.lookup::<Asn>(addr);
 
         match autonomous_system {
             Ok(autonomous_system) => {

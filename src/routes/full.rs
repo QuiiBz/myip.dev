@@ -60,8 +60,8 @@ pub async fn full(
 
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);
-    let r#as = AS::from(&state.maxmind_asn, addr.clone());
-    let geo = Geo::from(&state.maxmind_city, addr);
+    let r#as = AS::new(&state.maxmind, addr.clone());
+    let geo = Geo::new(&state.maxmind, addr);
 
     let http_version = request.headers().get(X_REAL_PROTO).map_or_else(
         || format!("{:?}", request.version()),

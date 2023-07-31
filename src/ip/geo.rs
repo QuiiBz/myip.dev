@@ -1,9 +1,10 @@
-use std::{net::IpAddr, sync::Arc};
+use std::net::IpAddr;
 
 use maxminddb::geoip2::City;
 use serde::Serialize;
 
-use super::{MaxmindDB, UNKNOWN};
+use super::UNKNOWN;
+use crate::state::Maxmind;
 
 #[derive(Debug, Serialize)]
 pub struct Geo {
@@ -25,8 +26,8 @@ impl Default for Geo {
 }
 
 impl Geo {
-    pub fn from<'a>(maxmind: &'a Arc<MaxmindDB>, addr: IpAddr) -> Self {
-        let city = maxmind.lookup::<City<'a>>(addr);
+    pub fn new<'a>(maxmind: &'a Maxmind, addr: IpAddr) -> Self {
+        let city = maxmind.city.lookup::<City<'a>>(addr);
 
         match city {
             Ok(city) => Self {
