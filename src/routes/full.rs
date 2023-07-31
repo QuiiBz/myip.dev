@@ -37,6 +37,7 @@ pub async fn full(
     request: Request<Body>,
 ) -> Response {
     let user_agent_header = request.headers().get(USER_AGENT);
+    // TODO: handle error
     let user_agent = user_agent_header.map(|user_agent| user_agent.to_str().unwrap().to_string());
 
     // TODO: refactor this shit
@@ -54,6 +55,7 @@ pub async fn full(
             x_real_port.to_str().unwrap().parse().unwrap()
         });
 
+    // TODO: handle error
     let addr = ip.parse::<IpAddr>().unwrap();
 
     let is_automated = is_user_agent_automated(&user_agent);
@@ -81,6 +83,7 @@ pub async fn full(
         return Json(full).into_response();
     }
 
+    // TODO: handle error
     let html = state.handlebars.render("full", &full).unwrap();
     return Html(html).into_response();
 }

@@ -28,6 +28,7 @@ impl From<IpAddr> for Ip {
     }
 }
 
+// TODO: try from?
 impl From<Ip> for IpAddr {
     fn from(ip: Ip) -> Self {
         match ip {
