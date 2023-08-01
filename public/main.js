@@ -76,6 +76,14 @@ function onLoad() {
 
     geoFlag.innerText = emoji
   }
+
+  const { hostname } = window.location
+
+  if (hostname.startsWith('ipv6.') || hostname.startsWith('6.')) {
+    document.getElementById('link-ipv6')?.classList.add('text-slate-800')
+  } else {
+    document.getElementById('link-ipv4')?.classList.add('text-slate-800')
+  }
 }
 
 document.addEventListener('DOMContentLoaded', onLoad)
