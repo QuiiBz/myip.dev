@@ -44,6 +44,8 @@ impl AppState {
     fn load_handlebars<'a>() -> Result<Handlebars<'a>> {
         let mut handlebars = Handlebars::new();
 
+        handlebars.register_template_file("layout", "./src/templates/layout.html")?;
+
         handlebars.register_template_file("full", "./src/templates/full.html")?;
         handlebars.register_template_file("ip", "./src/templates/ip.html")?;
 
