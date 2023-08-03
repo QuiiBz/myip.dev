@@ -4,7 +4,7 @@ use axum::{
     body::Body,
     extract::{ConnectInfo, State},
     http::header::USER_AGENT,
-    http::Request,
+    http::{Request, StatusCode},
     response::{Html, IntoResponse, Response},
     Json,
 };
@@ -55,8 +55,14 @@ pub async fn full(
             x_real_port.to_str().unwrap().parse().unwrap()
         });
 
-    // TODO: handle error
-    let addr = ip.parse::<IpAddr>().unwrap();
+    let addr = match ip.parse::<IpAddr>() {
+        Ok(addr) => addr,
+        Err(err) => {
+            tracing::error!("Invalid IP address format ({}): {}", ip, err);
+
+            return (StatusCode::BAD_REQUEST, "Invalid IP address format.").into_response();
+        }
+    };
 
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);

@@ -27,6 +27,7 @@ async fn main() -> Result<()> {
         .route("/raw", get(raw))
         .route("/:ip", get(ip))
         .route_service("/robots.txt", ServeFile::new("public/robots.txt"))
+        .route_service("/favicon.ico", ServeFile::new("public/favicon.ico"))
         .nest_service("/static", ServeDir::new("public"))
         .with_state(state)
         .layer(
