@@ -79,10 +79,10 @@ function onLoad() {
 
   const { hostname, pathname } = window.location
 
-  if (hostname.startsWith('ipv6.') || hostname.startsWith('6.')) {
-    document.getElementById('link-ipv6')?.classList.add('text-slate-800')
-  } else if (pathname !== '') {
+  if (pathname !== '/') {
     document.getElementById('link-find')?.classList.add('text-slate-800')
+  } else if (hostname.startsWith('ipv6.') || hostname.startsWith('6.')) {
+    document.getElementById('link-ipv6')?.classList.add('text-slate-800')
   } else {
     document.getElementById('link-ipv4')?.classList.add('text-slate-800')
   }

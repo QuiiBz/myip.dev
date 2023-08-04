@@ -13,13 +13,14 @@ use serde::Serialize;
 use crate::{
     connect::AddrConnectInfo,
     http::{is_user_agent_automated, Http},
-    ip::{get_reverse, Geo, AS},
+    ip::{get_reverse, Geo, AS, UNKNOWN},
     state::AppState,
 };
 
 pub const X_REAL_IP: &str = "X-Real-Ip";
 const X_REAL_PORT: &str = "X-Real-Port";
 const X_REAL_PROTO: &str = "X-Real-Proto";
+const X_TLS_VERSION: &str = "X-Tls-Version";
 
 #[derive(Debug, Serialize)]
 pub struct Full {
@@ -74,7 +75,16 @@ pub async fn full(
         |proto| proto.to_str().unwrap().to_string(),
     );
 
-    let http = Http::new(http_version, user_agent);
+    let mut tls = request.headers().get(X_TLS_VERSION).map_or_else(
+        || UNKNOWN.to_string(),
+        |tls| tls.to_str().unwrap().to_string(),
+    );
+
+    if tls == "{http.request.tls.version}" {
+        tls = UNKNOWN.to_string();
+    }
+
+    let http = Http::new(http_version, tls, user_agent);
 
     let full = Full {
         ip,

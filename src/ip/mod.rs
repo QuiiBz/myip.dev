@@ -8,7 +8,7 @@ mod geo;
 pub use geo::Geo;
 pub use r#as::AS;
 
-const UNKNOWN: &str = "unknown";
+pub const UNKNOWN: &str = "unknown";
 
 #[derive(Debug, Clone)]
 pub enum Ip {

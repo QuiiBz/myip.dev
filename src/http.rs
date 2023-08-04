@@ -3,13 +3,15 @@ use serde::Serialize;
 #[derive(Debug, Serialize)]
 pub struct Http {
     version: String,
+    tls: String,
     user_agent: Option<String>,
 }
 
 impl Http {
-    pub fn new(version: String, user_agent: Option<String>) -> Self {
+    pub fn new(version: String, tls: String, user_agent: Option<String>) -> Self {
         Self {
             version,
+            tls,
             user_agent,
         }
     }
