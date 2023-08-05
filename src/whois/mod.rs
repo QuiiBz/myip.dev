@@ -60,10 +60,18 @@ fn get_whois_server(ip: &IpAddr) -> Result<String> {
     return Err(anyhow!("No whois server found for IP {}", ip));
 }
 
-/// Query the given whois server for the given query. This is done by connecting to the
-/// given whois server and requesting the given query. The result is different depending
-/// on the whois server.
-fn get_whois_result(server: String, query: String) -> Result<Whois> {
+/// Query the given whois server for the given IP address. The result is different depending
+/// on the whois server, and might be recursive if the whois server returns a referral server.
+fn get_whois_result(server: String, addr: &IpAddr) -> Result<Whois> {
+    // The ARIN whois server requires a more specific query format, so we prepend `n` before
+    // the IP address to retrieve the "network address space".
+    //
+    // See https://www.arin.net/resources/registry/whois/rws/api/#nicname-whois-queries
+    let query = match server.as_str() {
+        "whois.arin.net" => format!("n {}\n", addr),
+        _ => format!("{}\n", addr),
+    };
+
     let mut stream = TcpStream::connect((server, WHOIS_PORT))?;
     stream.write_all(query.as_bytes())?;
 
@@ -71,6 +79,7 @@ fn get_whois_result(server: String, query: String) -> Result<Whois> {
 
     let mut cidr = UNKNOWN.into();
     let mut org = UNKNOWN.into();
+    let mut referral_server = None;
 
     for line in reader.lines() {
         if let Ok(line) = line {
@@ -96,7 +105,20 @@ fn get_whois_result(server: String, query: String) -> Result<Whois> {
                     org = parts[1].trim().to_string();
                 }
             }
+
+            if line.starts_with("ReferralServer:") {
+                let parts: Vec<String> = line.splitn(2, ":").map(|x| x.to_string()).collect();
+
+                if parts.len() == 2 {
+                    referral_server = Some(parts[1].trim().replace("whois://", "").to_string());
+                }
+            }
         }
+    }
+
+    // For realocations, we need to query the referral server
+    if let Some(referral_server) = referral_server {
+        return get_whois_result(referral_server, addr);
     }
 
     Ok(Whois { cidr, org })
@@ -121,15 +143,6 @@ impl Whois {
     pub fn new(addr: IpAddr) -> Result<Self> {
         let server = get_whois_server(&addr)?;
 
-        // The ARIN whois server requires a more specific query format, so we prepend `n` before
-        // the IP address to retrieve the "network address space".
-        //
-        // See https://www.arin.net/resources/registry/whois/rws/api/#nicname-whois-queries
-        let query = match server.as_str() {
-            "whois.arin.net" => format!("n {}\n", addr),
-            _ => format!("{}\n", addr),
-        };
-
-        get_whois_result(server, query)
+        get_whois_result(server, &addr)
     }
 }
