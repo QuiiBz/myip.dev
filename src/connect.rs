@@ -4,18 +4,11 @@ use hyper::server::conn::AddrStream;
 use crate::ip::Ip;
 
 #[derive(Debug, Clone)]
-pub struct AddrConnectInfo {
-    ip: Ip,
-    port: u16,
-}
+pub struct AddrConnectInfo(Ip);
 
 impl AddrConnectInfo {
     pub fn ip(&self) -> &Ip {
-        &self.ip
-    }
-
-    pub fn port(&self) -> u16 {
-        self.port
+        &self.0
     }
 }
 
@@ -23,9 +16,6 @@ impl Connected<&AddrStream> for AddrConnectInfo {
     fn connect_info(target: &AddrStream) -> Self {
         let addr = target.remote_addr();
 
-        AddrConnectInfo {
-            ip: addr.ip().into(),
-            port: addr.port(),
-        }
+        AddrConnectInfo(addr.ip().into())
     }
 }

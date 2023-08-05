@@ -4,6 +4,8 @@ use anyhow::Result;
 use handlebars::Handlebars;
 use maxminddb::Reader;
 
+use crate::whois::WhoisCache;
+
 type MaxmindDB = Reader<Vec<u8>>;
 
 pub struct Maxmind {
@@ -15,6 +17,7 @@ pub struct Maxmind {
 pub struct AppState {
     pub handlebars: Handlebars<'static>,
     pub maxmind: Arc<Maxmind>,
+    pub whois_cache: WhoisCache,
 }
 
 impl AppState {
@@ -35,9 +38,12 @@ impl AppState {
             }
         };
 
+        let whois_cache = WhoisCache::new();
+
         Ok(Self {
             handlebars,
             maxmind,
+            whois_cache,
         })
     }
 

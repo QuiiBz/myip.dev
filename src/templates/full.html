@@ -7,15 +7,9 @@
       </div>
       <div class="grid gap-16 grid-cols-1 lg:grid-cols-3">
         <section class="flex flex-col gap-4">
-          <h2 class="text-sm text-slate-500">Connection</h2>
+          <h2 class="text-sm text-slate-500">Network</h2>
           <div class="flex flex-col gap-2">
             <!-- TODO: replace with dl dt dd -->
-            <p>
-              Port:
-              <span class="text-slate-800 select-all">
-                {{port}}
-              </span>
-            </p>
             <p>
               Reverse:
               <span class="text-slate-800 select-all">
@@ -23,9 +17,21 @@
               </span>
             </p>
             <p>
+              CIDR:
+              <span class="text-slate-800 select-all">
+                {{whois.cidr}}
+              </span>
+            </p>
+            <p>
               AS:
               <span class="text-slate-800">
-                {{as.org}} (<span class="text-slate-800 select-all">AS{{as.asn}}</span>)
+                {{as.org}} (<span class="text-slate-800 select-all">{{as.asn}}</span>)
+              </span>
+            </p>
+            <p>
+              Organization:
+              <span class="text-slate-800">
+                {{whois.org}}
               </span>
             </p>
           </div>

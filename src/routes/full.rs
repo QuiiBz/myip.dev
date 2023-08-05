@@ -15,19 +15,19 @@ use crate::{
     http::{is_user_agent_automated, Http},
     ip::{get_reverse, Geo, AS, UNKNOWN},
     state::AppState,
+    whois::Whois,
 };
 
 pub const X_REAL_IP: &str = "X-Real-Ip";
-const X_REAL_PORT: &str = "X-Real-Port";
 const X_REAL_PROTO: &str = "X-Real-Proto";
 const X_TLS_VERSION: &str = "X-Tls-Version";
 
 #[derive(Debug, Serialize)]
 pub struct Full {
     ip: String,
-    port: u16,
     reverse: String,
     r#as: AS,
+    whois: Whois,
     geo: Geo,
     http: Http,
 }
@@ -49,13 +49,6 @@ pub async fn full(
             x_real_ip.to_str().unwrap().to_string()
         });
 
-    let port = request
-        .headers()
-        .get(X_REAL_PORT)
-        .map_or(addr.port(), |x_real_port| {
-            x_real_port.to_str().unwrap().parse().unwrap()
-        });
-
     let addr = match ip.parse::<IpAddr>() {
         Ok(addr) => addr,
         Err(err) => {
@@ -68,6 +61,7 @@ pub async fn full(
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);
     let r#as = AS::new(&state.maxmind, addr.clone());
+    let whois = state.whois_cache.get(addr.clone());
     let geo = Geo::new(&state.maxmind, addr);
 
     let http_version = request.headers().get(X_REAL_PROTO).map_or_else(
@@ -88,9 +82,9 @@ pub async fn full(
 
     let full = Full {
         ip,
-        port,
         reverse,
         r#as,
+        whois,
         geo,
         http,
     };

@@ -14,6 +14,7 @@ use crate::{
     http::is_user_agent_automated,
     ip::{get_reverse, Geo, AS},
     state::AppState,
+    whois::Whois,
 };
 
 #[derive(Debug, Serialize)]
@@ -21,6 +22,7 @@ pub struct Ip {
     ip: String,
     reverse: String,
     r#as: AS,
+    whois: Whois,
     geo: Geo,
 }
 
@@ -44,12 +46,14 @@ pub async fn ip(
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);
     let r#as = AS::new(&state.maxmind, addr.clone());
+    let whois = state.whois_cache.get(addr.clone());
     let geo = Geo::new(&state.maxmind, addr);
 
     let ip = Ip {
         ip,
         reverse,
         r#as,
+        whois,
         geo,
     };
 

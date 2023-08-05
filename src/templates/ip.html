@@ -3,14 +3,14 @@
     <main class="flex flex-col gap-32 items-center justify-center w-screen min-h-screen">
       <div class="flex flex-col items-center justify-center gap-4">
         <div type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200">{{ip}}</div>
-        <form id="find-form" class="flex items-center gap-2">
-          <input id="find-input" type="text" value="{{ip}}" placeholder="Find IP" class="w-20 px-1 py-0.5 border border-slate-200 rounded">
+        <form id="find-form" class="flex items-center gap-4">
+          <input id="find-input" type="text" value="{{ip}}" placeholder="0.0.0.0" class="w-36 px-1.5 py-1 border border-slate-200 rounded">
           <button type="submit" class="hover:text-slate-800">Find</span>
         </form>
       </div>
       <div class="grid gap-16 grid-cols-1 lg:grid-cols-3">
         <section class="flex flex-col gap-4">
-          <h2 class="text-sm text-slate-500">Connection</h2>
+          <h2 class="text-sm text-slate-500">Network</h2>
           <div class="flex flex-col gap-2">
             <!-- TODO: replace with dl dt dd -->
             <p>
@@ -20,9 +20,21 @@
               </span>
             </p>
             <p>
+              CIDR:
+              <span class="text-slate-800 select-all">
+                {{whois.cidr}}
+              </span>
+            </p>
+            <p>
               AS:
               <span class="text-slate-800">
-                {{as.org}} (<span class="text-slate-800 select-all">AS{{as.asn}}</span>)
+                {{as.org}} (<span class="text-slate-800 select-all">{{as.asn}}</span>)
+              </span>
+            </p>
+            <p>
+              Organization:
+              <span class="text-slate-800">
+                {{whois.org}}
               </span>
             </p>
           </div>

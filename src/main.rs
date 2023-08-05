@@ -15,6 +15,7 @@ mod http;
 mod ip;
 mod routes;
 mod state;
+mod whois;
 
 #[tokio::main]
 async fn main() -> Result<()> {

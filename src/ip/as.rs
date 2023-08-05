@@ -29,7 +29,7 @@ impl AS {
             Ok(autonomous_system) => {
                 let asn = autonomous_system
                     .autonomous_system_number
-                    .map_or_else(|| UNKNOWN.into(), |asn| asn.to_string());
+                    .map_or_else(|| UNKNOWN.into(), |asn| format!("AS{}", asn));
 
                 let org = autonomous_system
                     .autonomous_system_organization

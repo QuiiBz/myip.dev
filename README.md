@@ -1,7 +1,7 @@
 <p align="center">
     <img alt="" height="60px" src="./public/android-chrome-256x256.png">
   <br />
-  Minimalist IP and connection information tool
+  Minimalist IP and network information tool
 </p>
 
 ---
