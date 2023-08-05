@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="minimalist IP and network information tool">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="minimalist IP and network information tool">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
 
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/main.js" defer></script>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/main.js" defer></script>
 
-    <title>myip.dev - Minimalist IP and network information tool</title>
+  <title>myip.dev - Minimalist IP and network information tool</title>
 </head>
-<body class="text-slate-500 text-xs">
-    <header class="absolute top-4 left-1/2 transform -translate-x-1/2 flex gap-8 items-center">
-      <a id="link-ipv4" href="https://myip.dev" class="hover:text-slate-800 hover:underline">My IPv4</a>
-      <a id="link-ipv6" href="https://ipv6.myip.dev" class="hover:text-slate-800 hover:underline">My IPv6</a>
-      <a id="link-find" href="/{{ip}}" class="hover:text-slate-800 hover:underline">Find IP</a>
-    </header>
-    {{> page}}
-    <footer class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
-      <p>Copyright Tom Lienard & contributors</p>
-      <a href="https://github.com/QuiiBz/myip.dev" target="_blank" class="hover:text-slate-800 hover:underline cursor-alias">GitHub</a>
-    </footer>
+<body class="text-slate-500 text-xs overflow-x-hidden">
+  <header class="mx-auto py-4 flex gap-8 justify-center items-center">
+    <a id="link-ipv4" href="https://myip.dev" class="hover:text-slate-800 hover:underline">My IPv4</a>
+    <a id="link-ipv6" href="https://ipv6.myip.dev" class="hover:text-slate-800 hover:underline">My IPv6</a>
+    <a id="link-find" href="/{{ip}}" class="hover:text-slate-800 hover:underline">Find IP</a>
+  </header>
+  {{> page}}
+  <footer class="mx-auto py-4 flex gap-4 justify-center items-center">
+    <p>Copyright Tom Lienard & contributors</p>
+    <a href="https://github.com/QuiiBz/myip.dev" target="_blank" class="hover:text-slate-800 hover:underline cursor-alias">GitHub</a>
+  </footer>
 </body>
 </html>
