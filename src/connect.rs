@@ -16,6 +16,6 @@ impl Connected<&AddrStream> for AddrConnectInfo {
     fn connect_info(target: &AddrStream) -> Self {
         let addr = target.remote_addr();
 
-        AddrConnectInfo(addr.ip().into())
+        AddrConnectInfo(Ip::from(addr.ip()))
     }
 }

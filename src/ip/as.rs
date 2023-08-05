@@ -23,9 +23,7 @@ impl Default for AS {
 
 impl AS {
     pub fn new(maxmind: &Maxmind, addr: IpAddr) -> Self {
-        let autonomous_system = maxmind.asn.lookup::<Asn>(addr);
-
-        match autonomous_system {
+        match maxmind.asn.lookup::<Asn>(addr) {
             Ok(autonomous_system) => {
                 let asn = autonomous_system
                     .autonomous_system_number
@@ -37,8 +35,11 @@ impl AS {
 
                 Self { asn, org }
             }
-            // TODO: log error
-            Err(_) => Self::default(),
+            Err(err) => {
+                tracing::warn!("Failed to lookup AS for {}: {}", addr, err);
+
+                Self::default()
+            }
         }
     }
 }

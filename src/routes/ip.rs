@@ -31,8 +31,10 @@ pub async fn ip(
     Path(ip): Path<String>,
     request: Request<Body>,
 ) -> Response {
-    let user_agent_header = request.headers().get(USER_AGENT);
-    let user_agent = user_agent_header.map(|user_agent| user_agent.to_str().unwrap().to_string());
+    let user_agent = request
+        .headers()
+        .get(USER_AGENT)
+        .map(|user_agent| user_agent.to_str().unwrap_or_default().to_string());
 
     let addr = match ip.parse::<IpAddr>() {
         Ok(addr) => addr,
@@ -61,7 +63,12 @@ pub async fn ip(
         return Json(ip).into_response();
     }
 
-    // TODO: handle error
-    let html = state.handlebars.render("ip", &ip).unwrap();
-    return Html(html).into_response();
+    match state.handlebars.render("ip", &ip) {
+        Ok(html) => Html(html).into_response(),
+        Err(err) => {
+            tracing::error!("Failed to render ip template: {}", err);
+
+            (StatusCode::INTERNAL_SERVER_ERROR, "Please try again later.").into_response()
+        }
+    }
 }

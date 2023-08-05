@@ -27,9 +27,7 @@ impl Default for Geo {
 
 impl Geo {
     pub fn new<'a>(maxmind: &'a Maxmind, addr: IpAddr) -> Self {
-        let city = maxmind.city.lookup::<City<'a>>(addr);
-
-        match city {
+        match maxmind.city.lookup::<City<'a>>(addr) {
             Ok(city) => Self {
                 // TODO: clean this shit
                 city: city.city.as_ref().map_or_else(
@@ -60,8 +58,11 @@ impl Geo {
                     location.longitude.map_or(0.0, |longitude| longitude)
                 }),
             },
-            // TODO: log error
-            Err(_) => Self::default(),
+            Err(err) => {
+                tracing::warn!("Failed to lookup AS for {}: {}", addr, err);
+
+                Self::default()
+            }
         }
     }
 }

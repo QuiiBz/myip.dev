@@ -57,7 +57,7 @@ fn get_whois_server(ip: &IpAddr) -> Result<String> {
         }
     }
 
-    return Err(anyhow!("Unable to find whois server"));
+    return Err(anyhow!("No whois server found for IP {}", ip));
 }
 
 /// Query the given whois server for the given query. This is done by connecting to the
@@ -119,10 +119,7 @@ impl Default for Whois {
 
 impl Whois {
     pub fn new(addr: IpAddr) -> Result<Self> {
-        let server = match get_whois_server(&addr) {
-            Ok(server) => server,
-            Err(_) => return Ok(Whois::default()),
-        };
+        let server = get_whois_server(&addr)?;
 
         // The ARIN whois server requires a more specific query format, so we prepend `n` before
         // the IP address to retrieve the "network address space".

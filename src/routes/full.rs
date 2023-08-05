@@ -37,22 +37,20 @@ pub async fn full(
     ConnectInfo(addr): ConnectInfo<AddrConnectInfo>,
     request: Request<Body>,
 ) -> Response {
-    let user_agent_header = request.headers().get(USER_AGENT);
-    // TODO: handle error
-    let user_agent = user_agent_header.map(|user_agent| user_agent.to_str().unwrap().to_string());
-
-    // TODO: refactor this shit
-    let ip = request
+    let user_agent = request
         .headers()
-        .get(X_REAL_IP)
-        .map_or(addr.ip().to_string(), |x_real_ip| {
-            x_real_ip.to_str().unwrap().to_string()
-        });
+        .get(USER_AGENT)
+        .map(|user_agent| user_agent.to_str().unwrap_or_default().to_string());
+
+    let ip = request.headers().get(X_REAL_IP).map_or_else(
+        || addr.ip().to_string(),
+        |x_real_ip| x_real_ip.to_str().unwrap_or_default().to_string(),
+    );
 
     let addr = match ip.parse::<IpAddr>() {
         Ok(addr) => addr,
         Err(err) => {
-            tracing::error!("Invalid IP address format ({}): {}", ip, err);
+            tracing::warn!("Could not parse IP {}: {}", ip, err);
 
             return (StatusCode::BAD_REQUEST, "Invalid IP address format.").into_response();
         }
@@ -66,12 +64,12 @@ pub async fn full(
 
     let http_version = request.headers().get(X_REAL_PROTO).map_or_else(
         || format!("{:?}", request.version()),
-        |proto| proto.to_str().unwrap().to_string(),
+        |proto| proto.to_str().unwrap_or_default().to_string(),
     );
 
     let mut tls = request.headers().get(X_TLS_VERSION).map_or_else(
         || UNKNOWN.to_string(),
-        |tls| tls.to_str().unwrap().to_string(),
+        |tls| tls.to_str().unwrap_or_default().to_string(),
     );
 
     if tls == "{http.request.tls.version}" {
@@ -93,7 +91,12 @@ pub async fn full(
         return Json(full).into_response();
     }
 
-    // TODO: handle error
-    let html = state.handlebars.render("full", &full).unwrap();
-    return Html(html).into_response();
+    match state.handlebars.render("full", &full) {
+        Ok(html) => Html(html).into_response(),
+        Err(err) => {
+            tracing::error!("Failed to render full template: {}", err);
+
+            (StatusCode::INTERNAL_SERVER_ERROR, "Please try again later.").into_response()
+        }
+    }
 }

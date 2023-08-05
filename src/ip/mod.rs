@@ -25,16 +25,6 @@ impl From<IpAddr> for Ip {
     }
 }
 
-// TODO: try from?
-impl From<Ip> for IpAddr {
-    fn from(ip: Ip) -> Self {
-        match ip {
-            Ip::V4(ip) => ip.parse().unwrap(),
-            Ip::V6(ip) => ip.parse().unwrap(),
-        }
-    }
-}
-
 impl ToString for Ip {
     fn to_string(&self) -> String {
         match self {
@@ -45,6 +35,9 @@ impl ToString for Ip {
 }
 
 pub fn get_reverse(addr: &IpAddr) -> String {
-    // TODO: log error
-    lookup_addr(&addr).unwrap_or(UNKNOWN.into())
+    lookup_addr(&addr).unwrap_or_else(|err| {
+        tracing::warn!("Failed to get reverse for {}: {}", addr, err);
+
+        return UNKNOWN.into();
+    })
 }

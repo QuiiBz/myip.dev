@@ -19,7 +19,10 @@ mod whois;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    tracing_subscriber::fmt::init();
+    let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        .with_max_level(tracing::Level::INFO)
+        .finish();
+    tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
 
     let state = AppState::new()?;
 
@@ -47,7 +50,7 @@ async fn main() -> Result<()> {
         );
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    tracing::debug!("Listening on {}", addr);
+    tracing::info!("Listening on {}", addr);
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service_with_connect_info::<AddrConnectInfo>())
