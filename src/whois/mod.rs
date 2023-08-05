@@ -124,6 +124,10 @@ impl Whois {
             Err(_) => return Ok(Whois::default()),
         };
 
+        // The ARIN whois server requires a more specific query format, so we prepend `n` before
+        // the IP address to retrieve the "network address space".
+        //
+        // See https://www.arin.net/resources/registry/whois/rws/api/#nicname-whois-queries
         let query = match server.as_str() {
             "whois.arin.net" => format!("n {}\n", addr),
             _ => format!("{}\n", addr),
