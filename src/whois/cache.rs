@@ -1,9 +1,10 @@
 use std::{
     net::IpAddr,
     num::NonZeroUsize,
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, MutexGuard},
 };
 
+use anyhow::Result;
 use lru::LruCache;
 
 use super::Whois;
@@ -11,6 +12,7 @@ use super::Whois;
 #[derive(Debug, Clone)]
 pub struct WhoisCache(Arc<Mutex<LruCache<IpAddr, Whois>>>);
 
+/// A cache for whois lookups, since they are expensive and can take a long time.
 impl WhoisCache {
     pub fn new() -> Self {
         Self(Arc::new(Mutex::new(LruCache::new(
@@ -18,33 +20,35 @@ impl WhoisCache {
         ))))
     }
 
-    /// A cache for whois lookups, since they are expensive and can take a long time.
-    pub fn get(&self, addr: IpAddr) -> Whois {
-        let mut lru = match self.0.lock() {
-            Ok(lru) => lru,
-            Err(err) => {
-                tracing::error!("Failed to lock LRU cache: {}", err);
+    fn lock(&self) -> Result<MutexGuard<LruCache<IpAddr, Whois>>> {
+        self.0
+            .lock()
+            .map_err(|err| anyhow::anyhow!("Failed to lock LRU cache: {}", err))
+    }
 
-                return Whois::default();
-            }
-        };
-
-        match lru.get(&addr) {
-            Some(whois) => whois.clone(),
+    fn inner_get(&self, addr: IpAddr) -> Result<Whois> {
+        // We don't want to hold the lock for the entire duration of the function
+        // because whois lookups can take a long time.
+        match self.lock()?.get(&addr) {
+            Some(whois) => Ok(whois.clone()),
             None => {
                 tracing::info!("No whois cache for IP {}, resolving...", addr);
 
-                let whois = match Whois::new(addr) {
-                    Ok(whois) => whois,
-                    Err(err) => {
-                        tracing::warn!("Failed to get whois for IP {}: {}", addr, err);
+                let whois = Whois::new(addr)?;
+                self.lock()?.put(addr, whois.clone());
 
-                        return Whois::default();
-                    }
-                };
+                Ok(whois)
+            }
+        }
+    }
 
-                lru.put(addr, whois.clone());
-                whois
+    pub fn get(&self, addr: IpAddr) -> Whois {
+        match self.inner_get(addr) {
+            Ok(whois) => whois,
+            Err(err) => {
+                tracing::warn!("Failed to get whois for IP {}: {}", addr, err);
+
+                Whois::default()
             }
         }
     }

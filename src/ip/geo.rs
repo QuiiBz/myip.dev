@@ -59,7 +59,7 @@ impl Geo {
                 }),
             },
             Err(err) => {
-                tracing::warn!("Failed to lookup AS for {}: {}", addr, err);
+                tracing::warn!("Failed to lookup Geo for {}: {}", addr, err);
 
                 Self::default()
             }

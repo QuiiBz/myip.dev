@@ -64,6 +64,7 @@ pub async fn full(
         |tls| tls.to_str().unwrap_or_default().to_string(),
     );
 
+    // Caddy will return "{http.request.tls.version}" if the request was not made over TLS.
     if tls == "{http.request.tls.version}" {
         tls = UNKNOWN.to_string();
     }
