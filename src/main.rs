@@ -1,5 +1,4 @@
 use crate::{
-    connect::AddrConnectInfo,
     routes::{full, ip, raw},
     state::AppState,
 };
@@ -10,7 +9,6 @@ use std::{net::SocketAddr, time::Duration};
 use tower::{buffer::BufferLayer, limit::RateLimitLayer, ServiceBuilder};
 use tower_http::services::{ServeDir, ServeFile};
 
-mod connect;
 mod http;
 mod ip;
 mod routes;
@@ -53,7 +51,7 @@ async fn main() -> Result<()> {
     tracing::info!("Listening on {}", addr);
 
     axum::Server::bind(&addr)
-        .serve(app.into_make_service_with_connect_info::<AddrConnectInfo>())
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
         .await
         .unwrap();
 

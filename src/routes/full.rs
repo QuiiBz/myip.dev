@@ -1,4 +1,4 @@
-use std::net::IpAddr;
+use std::net::{IpAddr, SocketAddr};
 
 use axum::{
     body::Body,
@@ -11,7 +11,6 @@ use axum::{
 use serde::Serialize;
 
 use crate::{
-    connect::AddrConnectInfo,
     http::{is_user_agent_automated, Http},
     ip::{get_reverse, Geo, AS, UNKNOWN},
     state::AppState,
@@ -34,7 +33,7 @@ pub struct Full {
 
 pub async fn full(
     State(state): State<AppState>,
-    ConnectInfo(addr): ConnectInfo<AddrConnectInfo>,
+    ConnectInfo(addr): ConnectInfo<SocketAddr>,
     request: Request<Body>,
 ) -> Response {
     let user_agent = request
