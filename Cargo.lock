@@ -502,7 +502,6 @@ dependencies = [
  "axum",
  "dns-lookup",
  "handlebars",
- "hyper",
  "lru",
  "maxminddb",
  "serde",

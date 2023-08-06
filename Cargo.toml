@@ -10,7 +10,6 @@ anyhow = "1.0.72"
 axum = "0.6.19"
 dns-lookup = "2.0.2"
 handlebars = "4.3.7"
-hyper = "0.14.27"
 lru = "0.11.0"
 maxminddb = "0.23.0"
 serde = { version = "1.0", features = ["derive"] }

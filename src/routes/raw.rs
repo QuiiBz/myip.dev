@@ -2,11 +2,8 @@ use std::net::SocketAddr;
 
 use axum::{body::Body, extract::ConnectInfo, http::Request};
 
-use super::full::X_REAL_IP;
+use crate::http::{extract_ip, X_REAL_IP};
 
 pub async fn raw(ConnectInfo(addr): ConnectInfo<SocketAddr>, request: Request<Body>) -> String {
-    request.headers().get(X_REAL_IP).map_or_else(
-        || addr.ip().to_string(),
-        |x_real_ip| x_real_ip.to_str().unwrap_or_default().to_string(),
-    )
+    extract_ip(request.headers().get(X_REAL_IP), addr.ip())
 }

@@ -11,15 +11,11 @@ use axum::{
 use serde::Serialize;
 
 use crate::{
-    http::{is_user_agent_automated, Http},
+    http::{extract_ip, is_user_agent_automated, Http, X_REAL_IP, X_REAL_PROTO, X_TLS_VERSION},
     ip::{get_reverse, Geo, AS, UNKNOWN},
     state::AppState,
     whois::Whois,
 };
-
-pub const X_REAL_IP: &str = "X-Real-Ip";
-const X_REAL_PROTO: &str = "X-Real-Proto";
-const X_TLS_VERSION: &str = "X-Tls-Version";
 
 #[derive(Debug, Serialize)]
 pub struct Full {
@@ -41,10 +37,7 @@ pub async fn full(
         .get(USER_AGENT)
         .map(|user_agent| user_agent.to_str().unwrap_or_default().to_string());
 
-    let ip = request.headers().get(X_REAL_IP).map_or_else(
-        || addr.ip().to_string(),
-        |x_real_ip| x_real_ip.to_str().unwrap_or_default().to_string(),
-    );
+    let ip = extract_ip(request.headers().get(X_REAL_IP), addr.ip());
 
     let addr = match ip.parse::<IpAddr>() {
         Ok(addr) => addr,
