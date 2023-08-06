@@ -27,12 +27,16 @@ impl WhoisCache {
     }
 
     fn inner_get(&self, addr: IpAddr) -> Result<Whois> {
-        // We don't want to hold the lock for the entire duration of the function
-        // because whois lookups can take a long time.
-        match self.lock()?.get(&addr) {
+        let mut lru = self.lock()?;
+
+        match lru.get(&addr) {
             Some(whois) => Ok(whois.clone()),
             None => {
                 tracing::info!("No whois cache for IP {}, resolving...", addr);
+
+                // We don't want to hold the lock for the entire duration of the function
+                // because whois lookups can take a long time.
+                drop(lru);
 
                 let whois = Whois::new(addr)?;
                 self.lock()?.put(addr, whois.clone());
