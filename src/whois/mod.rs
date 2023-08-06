@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use std::io::prelude::*;
 use std::io::BufReader;
 use std::net::IpAddr;
@@ -51,13 +52,16 @@ fn get_whois_server(ip: &IpAddr) -> Result<String> {
                 let parts: Vec<String> = line.splitn(2, ":").map(|x| x.to_string()).collect();
 
                 if parts.len() == 2 {
-                    return Ok(parts[1].trim().to_string());
+                    let server = parts[1].trim().to_string();
+                    tracing::debug!("Found whois server: {}", server);
+
+                    return Ok(server);
                 }
             }
         }
     }
 
-    return Err(anyhow!("No whois server found for IP {}", ip));
+    return Err(anyhow!("No whois server found"));
 }
 
 /// Query the given whois server for the given IP address. The result is different depending
@@ -71,6 +75,8 @@ fn get_whois_result(server: String, addr: &IpAddr) -> Result<Whois> {
         "whois.arin.net" => format!("n {}\n", addr),
         _ => format!("{}\n", addr),
     };
+
+    tracing::debug!("Using query: {:?}", query);
 
     let mut stream = TcpStream::connect((server, WHOIS_PORT))?;
     stream.write_all(query.as_bytes())?;
@@ -118,6 +124,8 @@ fn get_whois_result(server: String, addr: &IpAddr) -> Result<Whois> {
 
     // For realocations, we need to query the referral server
     if let Some(referral_server) = referral_server {
+        tracing::debug!("Querying referral server: {}", referral_server);
+
         return get_whois_result(referral_server, addr);
     }
 
@@ -139,9 +147,17 @@ impl Default for Whois {
     }
 }
 
+impl Display for Whois {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "CIDR: {}, Org: {}", self.cidr, self.org)
+    }
+}
+
 impl Whois {
     pub fn new(addr: IpAddr) -> Result<Self> {
         let server = get_whois_server(&addr)?;
+
+        let _guard = tracing::info_span!("whois", server = %server).entered();
 
         get_whois_result(server, &addr)
     }

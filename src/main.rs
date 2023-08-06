@@ -18,8 +18,10 @@ mod whois;
 #[tokio::main]
 async fn main() -> Result<()> {
     let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        .with_target(false)
         .with_max_level(tracing::Level::INFO)
         .finish();
+
     tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
 
     let state = AppState::new()?;

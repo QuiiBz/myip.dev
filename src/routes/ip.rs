@@ -45,6 +45,8 @@ pub async fn ip(
         }
     };
 
+    let _guard = tracing::info_span!("resolve", ip = %addr).entered();
+
     let is_automated = is_user_agent_automated(&user_agent);
     let reverse = get_reverse(&addr);
     let r#as = AS::new(&state.maxmind, addr.clone());

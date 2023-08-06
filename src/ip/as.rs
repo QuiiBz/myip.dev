@@ -36,7 +36,7 @@ impl AS {
                 Self { asn, org }
             }
             Err(err) => {
-                tracing::warn!("Failed to lookup AS for {}: {}", addr, err);
+                tracing::warn!("Failed to lookup AS: {}", err);
 
                 Self::default()
             }

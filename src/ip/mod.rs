@@ -36,7 +36,7 @@ impl ToString for Ip {
 
 pub fn get_reverse(addr: &IpAddr) -> String {
     lookup_addr(&addr).unwrap_or_else(|err| {
-        tracing::warn!("Failed to get reverse for {}: {}", addr, err);
+        tracing::warn!("Failed to get reverse: {}", err);
 
         return UNKNOWN.into();
     })
