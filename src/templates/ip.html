@@ -2,7 +2,7 @@
   {{#*inline "page"}}
     <main class="py-16 flex flex-col gap-32 items-center justify-center min-h-[calc(100vh-96px)]">
       <div class="flex flex-col items-center justify-center gap-4">
-        <div type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200">{{ip}}</div>
+        <div class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200 truncate max-w-[80vw]">{{ip}}</div>
         <form id="find-form" class="flex items-center gap-4">
           <input id="find-input" type="text" value="{{ip}}" placeholder="0.0.0.0" class="w-36 px-1.5 py-1 border border-slate-200 rounded">
           <button type="submit" class="hover:text-slate-800">Find</span>

@@ -2,7 +2,7 @@
   {{#*inline "page"}}
     <main class="py-16 flex flex-col gap-32 items-center justify-center min-h-[calc(100vh-96px)]">
       <div class="flex flex-col items-center justify-center gap-4">
-        <button id="copy-ip" data-ip="{{ip}}" type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200 hover:to-slate-800 hover:shadow-lg active:to-slate-700 cursor-grab active:cursor-grabbing">{{ip}}</button>
+        <button id="copy-ip" data-ip="{{ip}}" type="button" class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200 hover:to-slate-800 hover:shadow-lg active:to-slate-700 cursor-grab active:cursor-grabbing truncate max-w-[80vw]">{{ip}}</button>
         <span id="copy-ip-text">Click to copy</span>
       </div>
       <div class="grid gap-16 grid-cols-1 lg:grid-cols-3">
