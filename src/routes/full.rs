@@ -20,6 +20,7 @@ use crate::{
 #[derive(Debug, Serialize)]
 pub struct Full {
     ip: String,
+    is_ipv4: bool,
     reverse: String,
     r#as: AS,
     whois: Whois,
@@ -75,6 +76,7 @@ pub async fn full(
 
     let full = Full {
         ip,
+        is_ipv4: addr.is_ipv4(),
         reverse,
         r#as,
         whois,

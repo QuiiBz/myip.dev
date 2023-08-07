@@ -7,12 +7,12 @@
   {{/inline}}
 
   {{#*inline "page"}}
-    <main class="py-16 flex flex-col gap-32 items-center justify-center min-h-[calc(100vh-96px)]">
+    <main class="py-32 flex flex-col gap-32 items-center justify-center min-h-[calc(100vh-96px)]">
       <div class="flex flex-col items-center justify-center gap-4">
         <div class="bg-gradient-to-b from-slate-800 to-slate-900 text-slate-50 text-2xl rounded-md px-7 py-2 shadow-sm shadow-slate-200 truncate max-w-[80vw]">{{ip}}</div>
         <form id="find-form" class="flex items-center gap-4">
           <input id="find-input" type="text" value="{{ip}}" placeholder="0.0.0.0" class="w-36 px-1.5 py-1 border border-slate-200 rounded">
-          <button type="submit" class="hover:text-slate-800">Find</span>
+          <button type="submit" class="hover:text-slate-800">Search</span>
         </form>
       </div>
       <div class="grid gap-16 grid-cols-1 lg:grid-cols-3">
@@ -75,6 +75,33 @@
             </p>
           </div>
         </section>
+      </div>
+      <div class="mx-auto max-w-5xl">
+        <div class="flex flex-col items-center gap-2 max-w-lg mx-auto">
+          <h1 class="text-slate-800 text-xl">Search an IP address</h1>
+          <p>
+            You searched for the <span class="text-slate-800 select-all">{{ip}}</span> IP address,
+            {{#if is_ipv4}}
+              which is an IPv4 address. That means it follows the Internet Protocol version 4, which is the most common version of the Internet Protocol in use today. Due to the shortage of IPv4 addresses, IPv6 is being deployed to replace it.
+            {{else}}
+              which is an IPv6 address. That means it follows the Internet Protocol version 6, which is the most recent version of the Internet Protocol. IPv6 is being deployed to replace IPv4, which is running out of addresses.
+            {{/if}}
+          </p>
+        </div>
+        <div class="grid gap-16 grid-cols-2 mt-32">
+          <div class="flex flex-col gap-1">
+            <h2 class="text-slate-800 text-lg">What is a Reverse DNS?</h2>
+            <p>A reverse DNS is used to find the associated domain for a given IP address - it's the reverse process of a DNS lookup. Not all IPs have a reverse DNS, since it requires a <span class="font-mono">PTR</span> DNS record to be set.</p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h2 class="text-slate-800 text-lg">What is a CIDR?</h2>
+            <p>CIDR stands for Classless Inter-Domain Routing and is a method used to group IP addresses. It's written as <span class="font-mono">IP/number</span>, where <span class="font-mono">number</span> is known as the network mask. It represents the number of leading 1-bits in the subnet mask.</p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <h2 class="text-slate-800 text-lg">What is an AS and ASN?</h2>
+            <p>AS stands for Autonomous System, while ASN stands for Autonomous System Number. Each AS is operated by an entity (like an ISP, an individual, schools...) and operates a list of IP subnets. An AS is identified by a number, the ASN.</p>
+          </div>
+        </div>
       </div>
     </main>
   {{/inline}}
