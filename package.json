@@ -5,7 +5,7 @@
     "dev": "cargo watch -x run",
     "build": "cargo build --release",
     "dev:style": "pnpm build:style --watch",
-    "build:style": "tailwindcss -i ./src/templates/style.css -o ./public/style-19842.css"
+    "build:style": "tailwindcss -i ./src/templates/style.css -o ./public/style-42817.css"
   },
   "dependencies": {
     "tailwindcss": "^3.3.3"
