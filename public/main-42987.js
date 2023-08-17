@@ -17,7 +17,7 @@ function getFlagEmoji(countryCode) {
 function unsecuredCopyToClipboard(text) {
   const textArea = document.createElement("textarea");
   textArea.value = text;
-  document.head.appendChild(textArea);
+  document.body.insertBefore(textArea, document.body.firstChild);
   textArea.focus();
   textArea.select();
   try {
@@ -25,7 +25,7 @@ function unsecuredCopyToClipboard(text) {
   } catch (err) {
     console.error('Unable to copy to clipboard', err);
   }
-  document.head.removeChild(textArea);
+  document.body.removeChild(textArea);
 }
 
 function onLoad() {
