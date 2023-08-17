@@ -1,4 +1,4 @@
-// TODO: clean this whole file
+// TODO: clean this whole shit
 // https://dev.to/jorik/country-code-to-flag-emoji-a21
 function getFlagEmoji(countryCode) {
   if (countryCode === 'unknown') {
@@ -17,7 +17,7 @@ function getFlagEmoji(countryCode) {
 function unsecuredCopyToClipboard(text) {
   const textArea = document.createElement("textarea");
   textArea.value = text;
-  document.body.appendChild(textArea);
+  document.head.appendChild(textArea);
   textArea.focus();
   textArea.select();
   try {
@@ -25,7 +25,7 @@ function unsecuredCopyToClipboard(text) {
   } catch (err) {
     console.error('Unable to copy to clipboard', err);
   }
-  document.body.removeChild(textArea);
+  document.head.removeChild(textArea);
 }
 
 function onLoad() {
