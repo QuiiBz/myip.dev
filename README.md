@@ -24,6 +24,10 @@
 - Get IPv4 (plain text): `curl myip.dev/raw`
 - Get IPv6 (plain text): `curl 6.myip.dev/raw`
 
+## Sponsors
+
+![Sponsors](https://github.com/QuiiBz/dotfiles/blob/main/sponsors.png?raw=true)
+
 ## License
 
 [MIT](./LICENSE)
